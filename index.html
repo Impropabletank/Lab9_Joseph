@@ -91,11 +91,29 @@
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      const output = document.querySelector('output');
+      const firstNum = parseFloat(document.querySelector('#first-num').value);
+      const secondNum = parseFloat(document.querySelector('#second-num').value);
+      const operator = document.querySelector('#operator').value;
+
+      try {
+        // Validate inputs
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new Error("Please enter valid numbers!");
+        }
+        if (operator === "/" && secondNum === 0) {
+          throw new Error("Cannot divide by zero!");
+        }
+
+        // Calculate
+        const result = eval(`${firstNum} ${operator} ${secondNum}`);
+        output.innerHTML = result;
+      } catch (err) {
+        console.error("Calculator error:", err.message);
+        output.innerHTML = `Error: ${err.message}`;
+      } finally {
+        console.log("Calculation attempted.");
+      }
     });
 
     const errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
