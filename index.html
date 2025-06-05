@@ -92,27 +92,38 @@
     form.addEventListener('submit', e => {
       e.preventDefault();
       const output = document.querySelector('output');
-      const firstNum = parseFloat(document.querySelector('#first-num').value);
-      const secondNum = parseFloat(document.querySelector('#second-num').value);
+      const firstNumInput = document.querySelector('#first-num').value;
+      const secondNumInput = document.querySelector('#second-num').value;
       const operator = document.querySelector('#operator').value;
 
       try {
-        // Validate inputs
+        // Check for empty inputs
+        if (firstNumInput === '' || secondNumInput === '') {
+          throw new Error("Both fields must be filled!");
+        }
+
+        const firstNum = parseFloat(firstNumInput);
+        const secondNum = parseFloat(secondNumInput);
+
+        // Validate numbers
         if (isNaN(firstNum) || isNaN(secondNum)) {
           throw new Error("Please enter valid numbers!");
         }
+        
         if (operator === "/" && secondNum === 0) {
           throw new Error("Cannot divide by zero!");
         }
 
-        // Calculate
         const result = eval(`${firstNum} ${operator} ${secondNum}`);
         output.innerHTML = result;
       } catch (err) {
         console.error("Calculator error:", err.message);
         output.innerHTML = `Error: ${err.message}`;
+        // Optional: Highlight error fields
+        document.querySelector('#first-num').style.border = err.message.includes("filled") ? "1px solid red" : "";
+        document.querySelector('#second-num').style.border = err.message.includes("filled") ? "1px solid red" : "";
       } finally {
-        console.log("Calculation attempted.");
+        console.log("Calculation attempted at:", new Date().toLocaleTimeString());
       }
     });
 
