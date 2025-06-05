@@ -100,6 +100,9 @@
 
     const errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
+    let timerStarted = false;
+    let groupOpen = false;
+
     // Map button text to corresponding console methods
     errorBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -137,13 +140,19 @@
 
           // Grouping
           case "Console Group Start":
-            console.group("User Details");
-            console.log("Name: Alice");
-            console.log("Age: 25");
-            break;
-          case "Console Group End":
-            console.groupEnd();
-            break;
+        console.group("User Details");
+        console.log("Name: Alice");
+        console.log("Age: 25");
+        groupOpen = true;
+        break;
+      case "Console Group End":
+        if (groupOpen) {
+          console.groupEnd();
+          groupOpen = false;
+        } else {
+          console.warn("No group is open!");
+        }
+        break;
 
           // Tables
           case "Console Table":
@@ -156,12 +165,18 @@
 
           // Timers
           case "Start Timer":
-            console.time("Timer");
-            break;
-          case "End Timer":
+          console.time("Timer");
+          timerStarted = true;
+          break;
+        case "End Timer":
+          if (timerStarted) {
             console.timeEnd("Timer");
-            break;
-
+            timerStarted = false;
+          } else {
+            console.warn("Timer not started!");
+          }
+          break;
+          
           // Stack traces
           case "Console Trace":
             function outer() { inner(); }
