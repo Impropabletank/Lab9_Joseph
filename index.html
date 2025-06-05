@@ -140,19 +140,19 @@
 
           // Grouping
           case "Console Group Start":
-        console.group("User Details");
-        console.log("Name: Alice");
-        console.log("Age: 25");
-        groupOpen = true;
-        break;
-      case "Console Group End":
-        if (groupOpen) {
-          console.groupEnd();
-          groupOpen = false;
-        } else {
-          console.warn("No group is open!");
-        }
-        break;
+            console.group("User Details");
+            console.log("Name: Alice");
+            console.log("Age: 25");
+            groupOpen = true;
+            break;
+          case "Console Group End":
+            if (groupOpen) {
+              console.groupEnd();
+              groupOpen = false;
+            } else {
+              console.warn("No group is open!");
+            }
+            break;
 
           // Tables
           case "Console Table":
@@ -165,17 +165,18 @@
 
           // Timers
           case "Start Timer":
-          console.time("Timer");
-          timerStarted = true;
-          break;
-        case "End Timer":
-          if (timerStarted) {
-            console.timeEnd("Timer");
-            timerStarted = false;
-          } else {
-            console.warn("Timer not started!");
-          }
-          break;
+            console.time("Timer");
+            imerStarted = true;
+            break;
+          
+          case "End Timer":
+            if (timerStarted) {
+              console.timeEnd("Timer");
+              timerStarted = false;
+            } else {
+              console.warn("Timer not started!");
+            }
+            break;
           
           // Stack traces
           case "Console Trace":
