@@ -222,18 +222,22 @@
 
           // Timers
           case "Start Timer":
-            console.time("Timer");
-            imerStarted = true;
+            if (timerActive) {
+              console.warn("Timer already running!");
+            } else {
+              console.time(TIMER_NAME);
+              timerActive = true;
+              console.log("⏱️ Timer started");
+            }
             break;
           
           case "End Timer":
-            if (timerStarted) {
-              console.timeEnd("Timer");
-              timerStarted = false;
+            if (timerActive) {
+              console.timeEnd(TIMER_NAME);
+              timerActive = false;
             } else {
-              console.warn("Timer not started!");
+              console.warn("No active timer to end!");
             }
-            break;
           
           // Stack traces
           case "Console Trace":
