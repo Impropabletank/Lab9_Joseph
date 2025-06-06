@@ -88,42 +88,53 @@
   </main>
 
   <script>
-    let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
       const output = document.querySelector('output');
-      const firstNumInput = document.querySelector('#first-num').value;
-      const secondNumInput = document.querySelector('#second-num').value;
+      const firstNumInput = document.querySelector('#first-num');
+      const secondNumInput = document.querySelector('#second-num');
       const operator = document.querySelector('#operator').value;
 
+      // Reset styling
+      firstNumInput.style.border = '';
+      secondNumInput.style.border = '';
+
       try {
-        // Check for empty inputs
-        if (firstNumInput === '' || secondNumInput === '') {
-          throw new Error("Both fields must be filled!");
+        // Validate inputs
+        if (!firstNumInput.value.trim() || !secondNumInput.value.trim()) {
+          throw new CalculatorError("Both fields are required!", 
+            !firstNumInput.value.trim() ? "first-num" : "second-num");
         }
 
-        const firstNum = parseFloat(firstNumInput);
-        const secondNum = parseFloat(secondNumInput);
+        const firstNum = parseFloat(firstNumInput.value);
+        const secondNum = parseFloat(secondNumInput.value);
 
-        // Validate numbers
         if (isNaN(firstNum) || isNaN(secondNum)) {
-          throw new Error("Please enter valid numbers!");
+          throw new CalculatorError("Only numbers are allowed!", 
+            isNaN(firstNum) ? "first-num" : "second-num");
         }
-        
+
         if (operator === "/" && secondNum === 0) {
-          throw new Error("Cannot divide by zero!");
+          throw new CalculatorError("Division by zero!", "second-num");
         }
 
         const result = eval(`${firstNum} ${operator} ${secondNum}`);
         output.innerHTML = result;
+
       } catch (err) {
-        console.error("Calculator error:", err.message);
-        output.innerHTML = `Error: ${err.message}`;
-        // Optional: Highlight error fields
-        document.querySelector('#first-num').style.border = err.message.includes("filled") ? "1px solid red" : "";
-        document.querySelector('#second-num').style.border = err.message.includes("filled") ? "1px solid red" : "";
-      } finally {
-        console.log("Calculation attempted at:", new Date().toLocaleTimeString());
+        // Handle CalculatorError differently
+        if (err instanceof CalculatorError) {
+          err.logToConsole();
+          // Highlight problematic field
+          if (err.field) {
+            document.querySelector(`#${err.field}`).style.border = "2px solid red";
+          }
+          output.innerHTML = `Error: ${err.message}`;
+        } else {
+          // Fallback for other errors
+          console.error("Unexpected error:", err);
+          output.innerHTML = "An unexpected error occurred";
+        }
       }
     });
 
